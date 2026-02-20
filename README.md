@@ -29,6 +29,15 @@ Open `http://127.0.0.1:5000`.
 - `PORT=5000` to change port
 - `FFMPEG_LOCATION=C:\path\to\ffmpeg\bin`
 
+## Build Windows EXE
+From inside `gitreadyapp`:
+```powershell
+.\build_exe.ps1
+```
+
+Output:
+- `dist\CreatorMediaToolkit.exe`
+
 ## Notes
 - Downloaded files are written to `downloads/` by default.
 - Do not commit local media downloads, virtualenv files, or caches.

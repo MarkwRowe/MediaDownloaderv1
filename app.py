@@ -1,8 +1,10 @@
-﻿import os
+import os
 import re
+import sys
 import threading
 import time
 import uuid
+import webbrowser
 from pathlib import Path
 from urllib.parse import parse_qs, urlparse
 
@@ -12,7 +14,13 @@ from yt_dlp.utils import DownloadError
 
 app = Flask(__name__)
 
-BASE_DIR = Path(__file__).resolve().parent
+if getattr(sys, "frozen", False):
+    ASSET_DIR = Path(getattr(sys, "_MEIPASS", Path(sys.executable).resolve().parent))
+    BASE_DIR = Path(sys.executable).resolve().parent
+else:
+    ASSET_DIR = Path(__file__).resolve().parent
+    BASE_DIR = ASSET_DIR
+
 DOWNLOAD_DIR = BASE_DIR / "downloads"
 DOWNLOAD_DIR.mkdir(parents=True, exist_ok=True)
 
@@ -478,7 +486,7 @@ def analyze_metrics(metrics: dict) -> dict:
 
 @app.route("/")
 def index():
-    return send_from_directory(BASE_DIR, "index.html")
+    return send_from_directory(ASSET_DIR, "index.html")
 
 
 @app.route("/fetch_info", methods=["POST"])
@@ -711,4 +719,12 @@ if __name__ == "__main__":
     debug_mode = os.environ.get("FLASK_DEBUG", "").strip() in {"1", "true", "True"}
     host = os.environ.get("HOST", "127.0.0.1")
     port = int(os.environ.get("PORT", "5000"))
+
+    # Open the app UI automatically when launched as EXE/non-debug run.
+    if not debug_mode or os.environ.get("WERKZEUG_RUN_MAIN") == "true":
+        app_url = f"http://{host}:{port}"
+        threading.Timer(1.0, lambda: webbrowser.open_new_tab(app_url)).start()
+
     app.run(host=host, port=port, debug=debug_mode)
+
+

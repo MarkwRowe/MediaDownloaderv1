@@ -452,7 +452,6 @@
             <button class="menu-item" type="button" data-menu-action="pick-folder">Select Download Folder</button>
             <hr class="menu-divider" />
             <button class="menu-item" type="button" data-menu-action="start-download">Start Download</button>
-            <button class="menu-item" type="button" data-menu-action="analyze">Run Analysis</button>
           </div>
         </details>
 
@@ -460,7 +459,6 @@
           <summary>View</summary>
           <div class="menu-list">
             <button class="menu-item" type="button" data-menu-action="tab-downloader">Open Downloader</button>
-            <button class="menu-item" type="button" data-menu-action="tab-analyzer">Open Analyzer</button>
           </div>
         </details>
 
@@ -477,13 +475,12 @@
 
     <header class="header">
       <h1>Creator Media Toolkit</h1>
-      <p>Download videos in high quality and evaluate performance metrics from one clean workspace.</p>
+      <p>Download videos from YouTube, TikTok, and Instagram from one clean workspace.</p>
       <div id="globalLoading" class="top-loader"><div class="top-loader-fill"></div></div>
     </header>
 
     <nav class="tabbar">
       <button id="tabDownloader" class="tab-btn active" data-tab="downloaderPanel" type="button">Downloader</button>
-      <button id="tabAnalyzer" class="tab-btn" data-tab="analyzerPanel" type="button">Video Analyzer</button>
     </nav>
 
     <section id="downloaderPanel" class="section tab-panel active">
@@ -1203,9 +1200,7 @@
       if (action === 'fetch-info') fetchInfo();
       if (action === 'pick-folder') pickFolder();
       if (action === 'start-download') startDownload();
-      if (action === 'analyze') analyzeVideo();
       if (action === 'tab-downloader') setActiveTab('downloaderPanel');
-      if (action === 'tab-analyzer') setActiveTab('analyzerPanel');
       if (action === 'usage') {
         setStatus('Quick start: paste URL, fetch details, set format/quality, then download.', 'ok');
         setActiveTab('downloaderPanel');
@@ -1254,3 +1249,5 @@
   </script>
 </body>
 </html>
+
+
