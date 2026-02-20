@@ -1,0 +1,1256 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Creator Media Toolkit</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap');
+
+    :root {
+      --page-bg: #f3f6fc;
+      --surface: #ffffff;
+      --surface-soft: #f8faff;
+      --line: #dde5f2;
+      --line-strong: #c8d4e9;
+      --text: #172133;
+      --muted: #586680;
+      --primary: #1a73e8;
+      --primary-strong: #1158b8;
+      --success: #1e8e3e;
+      --danger: #c5221f;
+      --glow: 0 18px 44px rgba(26, 48, 86, 0.12);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Manrope", "Segoe UI", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 0% 0%, #e9f1ff 0, transparent 34%),
+        radial-gradient(circle at 100% 8%, #f0f5ff 0, transparent 30%),
+        var(--page-bg);
+      padding: 26px;
+    }
+
+    .shell {
+      width: min(1180px, 100%);
+      margin: 0 auto;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      box-shadow: var(--glow);
+      overflow: hidden;
+    }
+
+    .menubar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 10px 16px;
+      background: linear-gradient(180deg, #fdfefe, #f4f7fd);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .menu-group {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    details.menu {
+      position: relative;
+    }
+
+    details.menu > summary {
+      list-style: none;
+      cursor: pointer;
+      padding: 7px 12px;
+      border-radius: 10px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--muted);
+      border: 1px solid transparent;
+      transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+    }
+
+    details.menu > summary::-webkit-details-marker { display: none; }
+
+    details.menu[open] > summary,
+    details.menu > summary:hover {
+      color: var(--text);
+      background: #eef4ff;
+      border-color: #d3def0;
+    }
+
+    .menu-list {
+      position: absolute;
+      top: calc(100% + 8px);
+      left: 0;
+      z-index: 20;
+      min-width: 230px;
+      padding: 8px;
+      border: 1px solid var(--line-strong);
+      border-radius: 12px;
+      background: var(--surface);
+      box-shadow: 0 16px 34px rgba(20, 38, 70, 0.16);
+    }
+
+    .menu-item {
+      width: 100%;
+      border: 0;
+      border-radius: 8px;
+      background: transparent;
+      text-align: left;
+      color: var(--text);
+      font-size: 0.9rem;
+      font-weight: 600;
+      padding: 10px 11px;
+      cursor: pointer;
+    }
+
+    .menu-item:hover { background: #f1f6ff; }
+
+    .menu-divider {
+      margin: 5px 0;
+      border: 0;
+      border-top: 1px solid var(--line);
+    }
+
+    .app-state {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--primary);
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+    }
+
+    .header {
+      padding: 18px 24px 14px;
+      border-bottom: 1px solid var(--line);
+      background: linear-gradient(180deg, #ffffff, #f8fbff);
+    }
+
+    .header h1 {
+      margin: 0;
+      font-size: 1.36rem;
+      font-weight: 800;
+      letter-spacing: 0.01em;
+    }
+
+    .header p {
+      margin: 5px 0 0;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .top-loader {
+      margin-top: 12px;
+      height: 3px;
+      border-radius: 99px;
+      overflow: hidden;
+      background: #e5ecf9;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+    }
+
+    .top-loader.active { opacity: 1; }
+
+    .top-loader-fill {
+      width: 28%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, #78b0ff, var(--primary), transparent);
+      transform: translateX(-130%);
+      animation: loaderSlide 1.15s linear infinite;
+    }
+
+    @keyframes loaderSlide {
+      from { transform: translateX(-130%); }
+      to { transform: translateX(360%); }
+    }
+
+    .tabbar {
+      display: flex;
+      gap: 10px;
+      padding: 11px 18px 0;
+      border-bottom: 1px solid var(--line);
+      background: #f8fbff;
+    }
+    .tab-btn {
+      border: 1px solid var(--line);
+      border-bottom: 0;
+      border-top-left-radius: 11px;
+      border-top-right-radius: 11px;
+      padding: 10px 16px;
+      background: #f3f7ff;
+      color: #506181;
+      font-size: 0.9rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.18s ease, color 0.18s ease;
+    }
+
+    .tab-btn.active {
+      background: var(--surface);
+      color: var(--primary);
+      border-color: var(--line-strong);
+    }
+
+    .section {
+      padding: 18px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .section:last-child { border-bottom: 0; }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    .content {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 16px;
+    }
+
+    .card {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 15px;
+      background: var(--surface-soft);
+    }
+
+    .card h2 {
+      margin: 0 0 10px;
+      font-size: 1.04rem;
+      font-weight: 800;
+    }
+
+    .field { margin-bottom: 11px; }
+
+    .field label {
+      display: block;
+      margin-bottom: 6px;
+      color: #314766;
+      font-size: 0.86rem;
+      font-weight: 700;
+    }
+
+    input[type="url"],
+    input[type="text"],
+    input[type="number"],
+    select,
+    textarea {
+      width: 100%;
+      border: 1px solid var(--line-strong);
+      border-radius: 10px;
+      padding: 10px 11px;
+      font-size: 0.91rem;
+      color: var(--text);
+      background: #fff;
+      transition: border-color 0.18s ease, box-shadow 0.18s ease;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      outline: none;
+      border-color: #7ea8e6;
+      box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.12);
+    }
+
+    .row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .row.three { grid-template-columns: 1fr 1fr 1fr; }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+    }
+
+    button {
+      border: 0;
+      border-radius: 10px;
+      padding: 10px 14px;
+      background: var(--primary);
+      color: #fff;
+      font-size: 0.9rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.18s ease, transform 0.18s ease;
+    }
+
+    button:hover {
+      background: var(--primary-strong);
+      transform: translateY(-1px);
+    }
+
+    button:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    button.secondary {
+      background: #e9effa;
+      color: #2e456a;
+      border: 1px solid #d2ddef;
+    }
+
+    button.secondary:hover {
+      background: #dbe7fb;
+      color: #223a5f;
+    }
+
+    .toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.9rem;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .toggle input[type="checkbox"] {
+      width: 17px;
+      height: 17px;
+      accent-color: var(--primary);
+    }
+
+    .thumb {
+      width: 100%;
+      border-radius: 10px;
+      border: 1px solid var(--line-strong);
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+      background: #ecf2fd;
+      margin-bottom: 10px;
+    }
+
+    .meta p {
+      margin: 7px 0;
+      color: #4a5f7f;
+      font-size: 0.9rem;
+    }
+
+    .meta strong { color: #1d2f4d; }
+
+    .progress-wrap {
+      margin-top: 12px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 10px;
+      background: #fff;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 10px;
+      background: #e8eef9;
+      border-radius: 99px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      width: 0%;
+      height: 100%;
+      background: linear-gradient(90deg, #9ec2fb, #4b91f0, var(--primary));
+      transition: width 0.3s ease;
+    }
+
+    .status {
+      margin-top: 7px;
+      min-height: 19px;
+      font-size: 0.88rem;
+      color: var(--muted);
+    }
+    .status.error { color: var(--danger); }
+    .status.ok { color: var(--success); }
+
+    .results {
+      margin-top: 12px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 12px;
+      background: #fff;
+    }
+
+    .score {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: var(--primary);
+      margin-bottom: 8px;
+    }
+
+    .list {
+      margin: 6px 0 0;
+      padding-left: 18px;
+      color: #425779;
+      font-size: 0.9rem;
+    }
+
+    .metric-grid {
+      margin-top: 10px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      font-size: 0.86rem;
+    }
+
+    .metric-item {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 8px;
+      background: #f8fbff;
+      color: #3d5274;
+    }
+
+    .tab-panel.active { animation: panelIn .24s ease; }
+
+    @keyframes panelIn {
+      from { opacity: 0; transform: translateY(5px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 940px) {
+      body { padding: 14px; }
+
+      .content,
+      .row,
+      .row.three,
+      .metric-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .menubar {
+        flex-wrap: wrap;
+        justify-content: flex-start;
+      }
+
+      .app-state { margin-left: 4px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <div class="menubar">
+      <div class="menu-group">
+        <details class="menu" id="fileMenu">
+          <summary>File</summary>
+          <div class="menu-list">
+            <button class="menu-item" type="button" data-menu-action="new-session">New Session</button>
+            <button class="menu-item" type="button" data-menu-action="fetch-info">Fetch Video Details</button>
+            <button class="menu-item" type="button" data-menu-action="pick-folder">Select Download Folder</button>
+            <hr class="menu-divider" />
+            <button class="menu-item" type="button" data-menu-action="start-download">Start Download</button>
+            <button class="menu-item" type="button" data-menu-action="analyze">Run Analysis</button>
+          </div>
+        </details>
+
+        <details class="menu" id="viewMenu">
+          <summary>View</summary>
+          <div class="menu-list">
+            <button class="menu-item" type="button" data-menu-action="tab-downloader">Open Downloader</button>
+            <button class="menu-item" type="button" data-menu-action="tab-analyzer">Open Analyzer</button>
+          </div>
+        </details>
+
+        <details class="menu" id="helpMenu">
+          <summary>Help</summary>
+          <div class="menu-list">
+            <button class="menu-item" type="button" data-menu-action="usage">Quick Start Tips</button>
+          </div>
+        </details>
+      </div>
+
+      <div class="app-state" id="appState">Ready</div>
+    </div>
+
+    <header class="header">
+      <h1>Creator Media Toolkit</h1>
+      <p>Download videos in high quality and evaluate performance metrics from one clean workspace.</p>
+      <div id="globalLoading" class="top-loader"><div class="top-loader-fill"></div></div>
+    </header>
+
+    <nav class="tabbar">
+      <button id="tabDownloader" class="tab-btn active" data-tab="downloaderPanel" type="button">Downloader</button>
+      <button id="tabAnalyzer" class="tab-btn" data-tab="analyzerPanel" type="button">Video Analyzer</button>
+    </nav>
+
+    <section id="downloaderPanel" class="section tab-panel active">
+      <div class="content">
+        <div class="card">
+          <h2>Download Workspace</h2>
+          <div class="field">
+            <label for="url">Video URL (YouTube, TikTok, Instagram)</label>
+            <input id="url" type="url" placeholder="https://www.youtube.com/watch?v=..." />
+          </div>
+          <div id="platformHint" class="status">Detected platform: -</div>
+
+          <div class="controls" style="margin-bottom: 12px;">
+            <button id="fetchBtn" class="secondary" type="button">Fetch Details</button>
+          </div>
+
+          <div class="row">
+            <div class="field">
+              <label for="format">Output Format</label>
+              <select id="format">
+                <option value="mp4">MP4 Video</option>
+                <option value="mp3">MP3 Audio</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="quality">Max Quality</label>
+              <select id="quality">
+                <option value="360p">360p</option>
+                <option value="720p">720p</option>
+                <option value="1080p60" selected>1080p60</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="field">
+              <label for="selectedFolderDisplay">Save Folder (optional)</label>
+              <input id="selectedFolderDisplay" type="text" value="No folder selected (browser download will be used)" readonly />
+            </div>
+            <div class="field">
+              <label for="outputName">File Name (optional)</label>
+              <input id="outputName" type="text" placeholder="my-video-export" />
+            </div>
+          </div>
+
+          <div class="controls">
+            <button id="pickFolderBtn" class="secondary" type="button">Choose Folder</button>
+            <label class="toggle">
+              <input id="soundOn" type="checkbox" checked />
+              Include Audio
+            </label>
+            <button id="downloadBtn" type="button">Download</button>
+          </div>
+
+          <div class="progress-wrap">
+            <div class="progress-bar"><div id="progressFill" class="progress-fill"></div></div>
+            <div id="status" class="status">Idle</div>
+          </div>
+        </div>
+
+        <aside class="card">
+          <h2>Video Details</h2>
+          <img id="thumb" class="thumb" alt="Video thumbnail" style="display: none;" />
+          <div class="meta">
+            <p><strong id="title">No video selected</strong></p>
+            <p id="duration">Duration: -</p>
+            <p id="channel">Channel: -</p>
+            <p id="uploadDate">Upload date: -</p>
+            <p id="publicViews">Views: -</p>
+            <p id="publicLikes">Likes: -</p>
+            <p id="publicComments">Comments: -</p>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section id="analyzerPanel" class="section tab-panel">
+      <div class="card">
+        <h2>Video Performance Analyzer</h2>
+        <p style="margin-top:0;color:var(--muted);font-size:0.9rem;">Public fields are auto-filled from fetched metadata. Paste Studio metrics for a deeper report.</p>
+        <div class="row three">
+          <div class="field"><label>Views</label><input id="m_views" type="number" min="0" step="any" /></div>
+          <div class="field"><label>Likes</label><input id="m_likes" type="number" min="0" step="any" /></div>
+          <div class="field"><label>Dislikes</label><input id="m_dislikes" type="number" min="0" step="any" /></div>
+        </div>
+
+        <div class="row three">
+          <div class="field"><label>CTR (%)</label><input id="m_ctr" type="number" min="0" step="any" /></div>
+          <div class="field"><label>AVD (sec)</label><input id="m_avd" type="number" min="0" step="any" /></div>
+          <div class="field"><label>APV (%)</label><input id="m_apv" type="number" min="0" step="any" /></div>
+        </div>
+
+        <div class="row three">
+          <div class="field"><label>Impressions</label><input id="m_impressions" type="number" min="0" step="any" /></div>
+          <div class="field"><label>Unique Viewers</label><input id="m_unique_viewers" type="number" min="0" step="any" /></div>
+          <div class="field"><label>Watch Time (hours)</label><input id="m_watch_time" type="number" min="0" step="any" /></div>
+        </div>
+
+        <div class="row three">
+          <div class="field"><label>Shares</label><input id="m_shares" type="number" min="0" step="any" /></div>
+          <div class="field"><label>Comments</label><input id="m_comments" type="number" min="0" step="any" /></div>
+          <div class="field"><label>Subscribers Gained</label><input id="m_subs_gained" type="number" min="0" step="any" /></div>
+        </div>
+
+        <div class="row three">
+          <div class="field"><label>Subscribers Lost</label><input id="m_subs_lost" type="number" min="0" step="any" /></div>
+          <div class="field"><label>Returning Viewers</label><input id="m_returning_viewers" type="number" min="0" step="any" /></div>
+          <div class="field"><label>New Viewers</label><input id="m_new_viewers" type="number" min="0" step="any" /></div>
+        </div>
+
+        <div class="row three">
+          <div class="field"><label>End Screen CTR (%)</label><input id="m_end_screen_ctr" type="number" min="0" step="any" /></div>
+          <div class="field"><label>Card Teaser Clicks</label><input id="m_card_teaser_clicks" type="number" min="0" step="any" /></div>
+          <div class="field"><label>RPM ($)</label><input id="m_rpm" type="number" min="0" step="any" /></div>
+        </div>
+
+        <div class="row three">
+          <div class="field"><label>CPM ($)</label><input id="m_cpm" type="number" min="0" step="any" /></div>
+          <div class="field"><label>Playback-based CPM ($)</label><input id="m_playback_cpm" type="number" min="0" step="any" /></div>
+          <div class="field"><label>Estimated Revenue ($)</label><input id="m_estimated_revenue" type="number" min="0" step="any" /></div>
+        </div>
+
+        <div class="row three">
+          <div class="field"><label>Audience Retention (%)</label><input id="m_audience_retention" type="number" min="0" step="any" /></div>
+          <div class="field"><label>Relative Retention (%)</label><input id="m_relative_retention" type="number" min="0" step="any" /></div>
+          <div class="field"><label>Sub-to-View Ratio (%)</label><input id="m_sub_to_view_ratio" type="number" min="0" step="any" /></div>
+        </div>
+
+        <div class="row">
+          <div class="field"><label>Engagement Rate (%)</label><input id="m_engagement_rate" type="number" min="0" step="any" /></div>
+          <div class="field"><label>Traffic Sources (summary)</label><input id="m_traffic_sources" type="text" placeholder="Browse 40%, Suggested 30%, Search 20%" /></div>
+        </div>
+
+        <div class="controls">
+          <button id="uploadCsvBtn" class="secondary" type="button">Import Studio CSV</button>
+          <input id="csvFileInput" type="file" accept=".csv,text/csv" style="display: none;" />
+          <button id="analyzeBtn" type="button">Analyze</button>
+          <span id="analysisStatus" class="status">Ready for analysis.</span>
+        </div>
+
+        <div id="analysisResult" class="results" style="display:none;"></div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const urlInput = document.getElementById('url');
+    const platformHint = document.getElementById('platformHint');
+    const fetchBtn = document.getElementById('fetchBtn');
+    const formatSelect = document.getElementById('format');
+    const qualitySelect = document.getElementById('quality');
+    const soundOnInput = document.getElementById('soundOn');
+    const pickFolderBtn = document.getElementById('pickFolderBtn');
+    const selectedFolderDisplay = document.getElementById('selectedFolderDisplay');
+    const outputNameInput = document.getElementById('outputName');
+    const downloadBtn = document.getElementById('downloadBtn');
+    const analyzeBtn = document.getElementById('analyzeBtn');
+    const uploadCsvBtn = document.getElementById('uploadCsvBtn');
+    const csvFileInput = document.getElementById('csvFileInput');
+    const tabButtons = Array.from(document.querySelectorAll('.tab-btn'));
+    const globalLoading = document.getElementById('globalLoading');
+    const appState = document.getElementById('appState');
+
+    const thumb = document.getElementById('thumb');
+    const titleEl = document.getElementById('title');
+    const durationEl = document.getElementById('duration');
+    const channelEl = document.getElementById('channel');
+    const uploadDateEl = document.getElementById('uploadDate');
+    const publicViewsEl = document.getElementById('publicViews');
+    const publicLikesEl = document.getElementById('publicLikes');
+    const publicCommentsEl = document.getElementById('publicComments');
+
+    const progressFill = document.getElementById('progressFill');
+    const statusEl = document.getElementById('status');
+    const analysisStatus = document.getElementById('analysisStatus');
+    const analysisResult = document.getElementById('analysisResult');
+
+    let pollTimer = null;
+    let currentDurationSeconds = null;
+    let busyCount = 0;
+    let selectedDirectoryHandle = null;
+
+    function setAppState(text) {
+      appState.textContent = text;
+    }
+
+    function setStatus(text, cls = '') {
+      statusEl.textContent = text;
+      statusEl.className = `status ${cls}`.trim();
+    }
+
+    function setAnalysisStatus(text, cls = '') {
+      analysisStatus.textContent = text;
+      analysisStatus.className = `status ${cls}`.trim();
+    }
+
+    function setProgress(percent) {
+      const pct = Math.max(0, Math.min(100, Number(percent) || 0));
+      progressFill.style.width = `${pct}%`;
+    }
+
+    function triggerBrowserDownload(downloadUrl, fileName) {
+      const a = document.createElement('a');
+      a.href = downloadUrl;
+      if (fileName) a.download = fileName;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+    }
+
+    function detectPlatform(url) {
+      const text = String(url || '').toLowerCase();
+      if (text.includes('youtu.be') || text.includes('youtube.com')) return 'youtube';
+      if (text.includes('tiktok.com')) return 'tiktok';
+      if (text.includes('instagram.com')) return 'instagram';
+      return 'unknown';
+    }
+
+    function sanitizeName(name) {
+      const text = String(name || '').trim();
+      if (!text) return '';
+      return text.replace(/[\\/:*?"<>|]+/g, '_').replace(/\s+/g, ' ').trim();
+    }
+    function getSuggestedExtension(platform) {
+      if (platform === 'youtube' && formatSelect.value === 'mp3') return '.mp3';
+      return '.mp4';
+    }
+
+    async function saveToSelectedFolder(downloadUrl, fileName) {
+      if (!selectedDirectoryHandle) return false;
+      const res = await fetch(downloadUrl);
+      if (!res.ok) throw new Error('Could not fetch completed file from server.');
+      const blob = await res.blob();
+      const targetName = sanitizeName(fileName || 'download.mp4') || 'download.mp4';
+      const fileHandle = await selectedDirectoryHandle.getFileHandle(targetName, { create: true });
+      const writable = await fileHandle.createWritable();
+      await writable.write(blob);
+      await writable.close();
+      return true;
+    }
+
+    async function pickFolder() {
+      if (!window.showDirectoryPicker) {
+        setStatus('Folder picker is not supported in this browser. Browser download will be used.', 'error');
+        return;
+      }
+      try {
+        const handle = await window.showDirectoryPicker({ mode: 'readwrite' });
+        selectedDirectoryHandle = handle;
+        selectedFolderDisplay.value = handle.name ? `Selected: ${handle.name}` : 'Folder selected';
+        setStatus('Save folder selected.', 'ok');
+        setAppState('Folder Ready');
+      } catch (err) {
+        if (err && err.name === 'AbortError') return;
+        setStatus(err.message || 'Could not select folder.', 'error');
+      }
+    }
+
+    function setGlobalLoading(active) {
+      if (active) {
+        busyCount += 1;
+        globalLoading.classList.add('active');
+        setAppState('Working');
+        return;
+      }
+      busyCount = Math.max(0, busyCount - 1);
+      if (busyCount === 0) {
+        globalLoading.classList.remove('active');
+        setAppState('Ready');
+      }
+    }
+
+    function setActiveTab(tabId) {
+      tabButtons.forEach(btn => {
+        const isActive = btn.dataset.tab === tabId;
+        btn.classList.toggle('active', isActive);
+      });
+      document.querySelectorAll('.tab-panel').forEach(panel => {
+        panel.classList.toggle('active', panel.id === tabId);
+      });
+    }
+
+    function closeMenus() {
+      document.querySelectorAll('details.menu').forEach(menu => { menu.open = false; });
+    }
+
+    function clearSession() {
+      urlInput.value = '';
+      outputNameInput.value = '';
+      selectedDirectoryHandle = null;
+      selectedFolderDisplay.value = 'No folder selected (browser download will be used)';
+      titleEl.textContent = 'No video selected';
+      durationEl.textContent = 'Duration: -';
+      channelEl.textContent = 'Channel: -';
+      uploadDateEl.textContent = 'Upload date: -';
+      publicViewsEl.textContent = 'Views: -';
+      publicLikesEl.textContent = 'Likes: -';
+      publicCommentsEl.textContent = 'Comments: -';
+      thumb.src = '';
+      thumb.style.display = 'none';
+      currentDurationSeconds = null;
+      setProgress(0);
+      setStatus('New session started.', 'ok');
+      setAnalysisStatus('Ready for analysis.');
+      analysisResult.style.display = 'none';
+      document.querySelectorAll('input[id^="m_"]').forEach(el => { el.value = ''; });
+      updateSoundLabel();
+      setAppState('Ready');
+      setActiveTab('downloaderPanel');
+    }
+
+    function num(v) {
+      const text = String(v ?? '').trim();
+      if (!text) return null;
+      const n = Number(text);
+      return Number.isFinite(n) ? n : null;
+    }
+
+    function normalizeHeader(s) {
+      return String(s || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+    }
+
+    function parseCellNumber(v) {
+      const text = String(v ?? '').trim();
+      if (!text) return null;
+      const cleaned = text.replace(/[$,%\s]/g, '').replace(/,/g, '');
+      const n = Number(cleaned);
+      return Number.isFinite(n) ? n : null;
+    }
+
+    function parseCSV(text) {
+      const rows = [];
+      let row = [];
+      let cell = '';
+      let inQuotes = false;
+      for (let i = 0; i < text.length; i++) {
+        const ch = text[i];
+        const next = text[i + 1];
+        if (ch === '"' && inQuotes && next === '"') {
+          cell += '"';
+          i++;
+          continue;
+        }
+        if (ch === '"') {
+          inQuotes = !inQuotes;
+          continue;
+        }
+        if (ch === ',' && !inQuotes) {
+          row.push(cell);
+          cell = '';
+          continue;
+        }
+        if ((ch === '\n' || ch === '\r') && !inQuotes) {
+          if (ch === '\r' && next === '\n') i++;
+          row.push(cell);
+          if (row.some(c => String(c).trim() !== '')) rows.push(row);
+          row = [];
+          cell = '';
+          continue;
+        }
+        cell += ch;
+      }
+      row.push(cell);
+      if (row.some(c => String(c).trim() !== '')) rows.push(row);
+      return rows;
+    }
+
+    function selectBestDataRow(rows, headers) {
+      if (rows.length === 1) return rows[0];
+      const viewsIdx = headers.findIndex(h => h.includes('view'));
+      let best = rows[0];
+      let bestScore = -1;
+      rows.forEach(r => {
+        let score = 0;
+        if (viewsIdx >= 0) score += parseCellNumber(r[viewsIdx]) || 0;
+        score += r.filter(v => parseCellNumber(v) !== null).length;
+        if (score > bestScore) {
+          best = r;
+          bestScore = score;
+        }
+      });
+      return best;
+    }
+
+    function setMetricField(id, value) {
+      const el = document.getElementById(id);
+      if (!el || value === null || value === undefined || value === '') return false;
+      el.value = value;
+      return true;
+    }
+    async function handleCsvImport(file) {
+      const text = await file.text();
+      const rows = parseCSV(text);
+      if (rows.length < 2) throw new Error('CSV appears empty or missing data rows.');
+
+      const rawHeaders = rows[0];
+      const normalizedHeaders = rawHeaders.map(normalizeHeader);
+      const dataRows = rows.slice(1);
+      const bestRow = selectBestDataRow(dataRows, normalizedHeaders);
+
+      const valuesByHeader = {};
+      normalizedHeaders.forEach((h, i) => { valuesByHeader[h] = bestRow[i]; });
+
+      const aliases = {
+        m_views: ['views', 'view', 'viewcount'],
+        m_likes: ['likes', 'likecount'],
+        m_dislikes: ['dislikes', 'dislikecount'],
+        m_ctr: ['impressionsclickthroughrate', 'ctr', 'clickthroughrate'],
+        m_avd: ['averageviewduration', 'avgviewduration', 'avd'],
+        m_apv: ['averagepercentageviewed', 'apv'],
+        m_impressions: ['impressions'],
+        m_unique_viewers: ['uniqueviewers', 'uniqueviewer'],
+        m_watch_time: ['watchtimehours', 'watchtime', 'watchtimehrs'],
+        m_shares: ['shares'],
+        m_comments: ['comments', 'commentcount'],
+        m_subs_gained: ['subscribersgained', 'subsgained'],
+        m_subs_lost: ['subscriberslost', 'subslost'],
+        m_returning_viewers: ['returningviewers', 'returningviewer'],
+        m_new_viewers: ['newviewers', 'newviewer'],
+        m_end_screen_ctr: ['endscreenclicthroughrate', 'endscreenctr', 'endscreenclickthroughrate'],
+        m_card_teaser_clicks: ['cardteaserclicks', 'cardclicks', 'cardsclicks'],
+        m_rpm: ['rpm'],
+        m_cpm: ['cpm'],
+        m_playback_cpm: ['playbackbasedcpm', 'playbackcpm'],
+        m_estimated_revenue: ['estimatedrevenue', 'revenue'],
+        m_audience_retention: ['audienceretention', 'averageretention'],
+        m_relative_retention: ['relativeretention'],
+        m_sub_to_view_ratio: ['subtoviewratio', 'subscriberstoviewsratio'],
+        m_engagement_rate: ['engagementrate']
+      };
+
+      let filled = 0;
+      Object.entries(aliases).forEach(([fieldId, headerKeys]) => {
+        for (const hk of headerKeys) {
+          if (Object.prototype.hasOwnProperty.call(valuesByHeader, hk)) {
+            const parsed = parseCellNumber(valuesByHeader[hk]);
+            if (setMetricField(fieldId, parsed ?? valuesByHeader[hk])) filled++;
+            break;
+          }
+        }
+      });
+
+      const trafficHeader = normalizedHeaders.find(h => h.includes('trafficsource'));
+      if (trafficHeader) setMetricField('m_traffic_sources', valuesByHeader[trafficHeader]);
+
+      setAnalysisStatus(`CSV imported. ${filled} fields auto-filled. Running analysis...`, 'ok');
+      await analyzeVideo();
+    }
+
+    async function postJson(url, body) {
+      const res = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error || 'Request failed');
+      return data;
+    }
+
+    function updateSoundLabel() {
+      const platform = detectPlatform(urlInput.value.trim());
+      platformHint.textContent = `Detected platform: ${platform === 'unknown' ? '-' : platform}`;
+      const isYoutube = platform === 'youtube';
+
+      fetchBtn.disabled = !isYoutube;
+      formatSelect.disabled = !isYoutube;
+      qualitySelect.disabled = !isYoutube;
+      soundOnInput.disabled = !isYoutube;
+
+      if (!isYoutube) {
+        soundOnInput.checked = true;
+        return;
+      }
+
+      if (formatSelect.value === 'mp3') {
+        soundOnInput.checked = true;
+        soundOnInput.disabled = true;
+        qualitySelect.disabled = true;
+      }
+    }
+
+    function fmtUploadDate(yyyymmdd) {
+      if (!yyyymmdd || yyyymmdd.length !== 8) return '-';
+      return `${yyyymmdd.slice(0, 4)}-${yyyymmdd.slice(4, 6)}-${yyyymmdd.slice(6, 8)}`;
+    }
+
+    async function fetchInfo() {
+      const url = urlInput.value.trim();
+      if (!url) {
+        setStatus('Enter a URL first.', 'error');
+        return;
+      }
+      if (detectPlatform(url) !== 'youtube') {
+        setStatus('Fetch details is available for YouTube URLs only.', 'error');
+        return;
+      }
+
+      fetchBtn.disabled = true;
+      setGlobalLoading(true);
+      setStatus('Fetching video details...');
+
+      try {
+        const data = await postJson('/fetch_info', { url });
+        titleEl.textContent = data.title || 'Unknown title';
+        durationEl.textContent = `Duration: ${data.duration || '-'}`;
+        channelEl.textContent = `Channel: ${data.channel || '-'}`;
+        uploadDateEl.textContent = `Upload date: ${fmtUploadDate(data.upload_date)}`;
+        publicViewsEl.textContent = `Views: ${data.views ?? '-'}`;
+        publicLikesEl.textContent = `Likes: ${data.likes ?? '-'}`;
+        publicCommentsEl.textContent = `Comments: ${data.comments ?? '-'}`;
+        thumb.src = data.thumbnail || '';
+        thumb.style.display = data.thumbnail ? 'block' : 'none';
+
+        currentDurationSeconds = data.duration_seconds ?? null;
+        document.getElementById('m_views').value = data.views ?? '';
+        document.getElementById('m_likes').value = data.likes ?? '';
+        document.getElementById('m_dislikes').value = data.dislikes ?? '';
+        document.getElementById('m_comments').value = data.comments ?? '';
+
+        setStatus('Video details loaded.', 'ok');
+        setAnalysisStatus('Public stats are ready. Add Studio metrics and run analysis.', 'ok');
+      } catch (err) {
+        setStatus(err.message, 'error');
+      } finally {
+        setGlobalLoading(false);
+        fetchBtn.disabled = false;
+      }
+    }
+    async function startDownload() {
+      const url = urlInput.value.trim();
+      if (!url) {
+        setStatus('Enter a URL first.', 'error');
+        return;
+      }
+
+      const platform = detectPlatform(url);
+      const endpoint = platform === 'youtube'
+        ? '/download'
+        : platform === 'tiktok'
+          ? '/download_tiktok'
+          : platform === 'instagram'
+            ? '/download_instagram'
+            : null;
+
+      if (!endpoint) {
+        setStatus('Unsupported URL. Use YouTube, TikTok, or Instagram links.', 'error');
+        return;
+      }
+
+      if (pollTimer) {
+        clearInterval(pollTimer);
+        pollTimer = null;
+      }
+
+      const payload = {
+        url,
+        output_name: sanitizeName(outputNameInput.value.trim())
+      };
+
+      if (platform === 'youtube') {
+        payload.format = formatSelect.value;
+        payload.quality = qualitySelect.value;
+        payload.sound_on = !!soundOnInput.checked;
+      }
+
+      downloadBtn.disabled = true;
+      fetchBtn.disabled = true;
+      setGlobalLoading(true);
+      setProgress(0);
+      setStatus(`Starting ${platform} download...`);
+
+      try {
+        const data = await postJson(endpoint, payload);
+        pollProgress(data.job_id, platform);
+      } catch (err) {
+        setStatus(err.message, 'error');
+        setGlobalLoading(false);
+        downloadBtn.disabled = false;
+        fetchBtn.disabled = detectPlatform(urlInput.value.trim()) !== 'youtube';
+      }
+    }
+
+    function pollProgress(jobId, platform) {
+      pollTimer = setInterval(async () => {
+        try {
+          const res = await fetch(`/progress/${jobId}`);
+          const data = await res.json();
+          if (!res.ok) throw new Error(data.error || 'Progress check failed');
+
+          setProgress(data.progress || 0);
+
+          if (data.status === 'completed') {
+            clearInterval(pollTimer);
+            pollTimer = null;
+
+            if (data.download_url) {
+              try {
+                const ext = getSuggestedExtension(platform);
+                const fallbackName = `${sanitizeName(outputNameInput.value.trim()) || platform}-download${ext}`;
+                const fileName = data.file_name || fallbackName;
+                if (selectedDirectoryHandle) {
+                  await saveToSelectedFolder(data.download_url, fileName);
+                  setStatus(`Saved to selected folder as ${fileName}`, 'ok');
+                } else {
+                  triggerBrowserDownload(data.download_url, fileName);
+                  setStatus('Browser download started.', 'ok');
+                }
+              } catch (err) {
+                setStatus(err.message || 'Could not save to selected folder. Starting browser download.', 'error');
+                triggerBrowserDownload(data.download_url, data.file_name);
+              }
+            } else {
+              setStatus('Download complete.', 'ok');
+            }
+
+            setGlobalLoading(false);
+            downloadBtn.disabled = false;
+            fetchBtn.disabled = detectPlatform(urlInput.value.trim()) !== 'youtube';
+            return;
+          }
+
+          if (data.status === 'error') {
+            clearInterval(pollTimer);
+            pollTimer = null;
+            setStatus(data.error || 'Download failed.', 'error');
+            setGlobalLoading(false);
+            downloadBtn.disabled = false;
+            fetchBtn.disabled = detectPlatform(urlInput.value.trim()) !== 'youtube';
+            return;
+          }
+
+          setStatus(`Status: ${data.status} (${data.progress || 0}%)`);
+        } catch (err) {
+          clearInterval(pollTimer);
+          pollTimer = null;
+          setStatus(err.message, 'error');
+          setGlobalLoading(false);
+          downloadBtn.disabled = false;
+          fetchBtn.disabled = detectPlatform(urlInput.value.trim()) !== 'youtube';
+        }
+      }, 1200);
+    }
+
+    function buildMetricsPayload() {
+      return {
+        views: num(document.getElementById('m_views').value),
+        likes: num(document.getElementById('m_likes').value),
+        dislikes: num(document.getElementById('m_dislikes').value),
+        ctr: num(document.getElementById('m_ctr').value),
+        avd: num(document.getElementById('m_avd').value),
+        apv: num(document.getElementById('m_apv').value),
+        impressions: num(document.getElementById('m_impressions').value),
+        unique_viewers: num(document.getElementById('m_unique_viewers').value),
+        watch_time: num(document.getElementById('m_watch_time').value),
+        shares: num(document.getElementById('m_shares').value),
+        comments: num(document.getElementById('m_comments').value),
+        subs_gained: num(document.getElementById('m_subs_gained').value),
+        subs_lost: num(document.getElementById('m_subs_lost').value),
+        returning_viewers: num(document.getElementById('m_returning_viewers').value),
+        new_viewers: num(document.getElementById('m_new_viewers').value),
+        end_screen_ctr: num(document.getElementById('m_end_screen_ctr').value),
+        card_teaser_clicks: num(document.getElementById('m_card_teaser_clicks').value),
+        rpm: num(document.getElementById('m_rpm').value),
+        cpm: num(document.getElementById('m_cpm').value),
+        playback_cpm: num(document.getElementById('m_playback_cpm').value),
+        estimated_revenue: num(document.getElementById('m_estimated_revenue').value),
+        traffic_sources: document.getElementById('m_traffic_sources').value.trim(),
+        audience_retention: num(document.getElementById('m_audience_retention').value),
+        relative_retention: num(document.getElementById('m_relative_retention').value),
+        sub_to_view_ratio: num(document.getElementById('m_sub_to_view_ratio').value),
+        engagement_rate: num(document.getElementById('m_engagement_rate').value),
+        duration_seconds: currentDurationSeconds
+      };
+    }
+
+    function renderAnalysis(data) {
+      const metricsHtml = (data.metrics || [])
+        .map(m => `<div class="metric-item"><strong>${m.name}</strong><br/>${m.rating}${m.score !== null ? ` (${m.score}/100)` : ''}</div>`)
+        .join('');
+
+      const tipsHtml = (data.tips || []).map(t => `<li>${t}</li>`).join('');
+      const notesHtml = (data.notes || []).map(t => `<li>${t}</li>`).join('');
+
+      analysisResult.innerHTML = `
+        <div class="score">Overall score: ${data.overall_score}/100 - ${data.verdict}</div>
+        <strong>Top Improvement Tips</strong>
+        <ul class="list">${tipsHtml}</ul>
+        <strong>Metrics Summary</strong>
+        <div class="metric-grid">${metricsHtml}</div>
+        <strong style="display:block;margin-top:10px;">Notes</strong>
+        <ul class="list">${notesHtml}</ul>
+      `;
+      analysisResult.style.display = 'block';
+    }
+    async function analyzeVideo() {
+      analyzeBtn.disabled = true;
+      uploadCsvBtn.disabled = true;
+      setGlobalLoading(true);
+      setAnalysisStatus('Analyzing metrics...');
+      try {
+        const metrics = buildMetricsPayload();
+        const data = await postJson('/analyze_video', { metrics });
+        renderAnalysis(data);
+        setAnalysisStatus('Analysis complete.', 'ok');
+      } catch (err) {
+        setAnalysisStatus(err.message, 'error');
+      } finally {
+        setGlobalLoading(false);
+        analyzeBtn.disabled = false;
+        uploadCsvBtn.disabled = false;
+      }
+    }
+
+    function handleMenuAction(action) {
+      if (action === 'new-session') clearSession();
+      if (action === 'fetch-info') fetchInfo();
+      if (action === 'pick-folder') pickFolder();
+      if (action === 'start-download') startDownload();
+      if (action === 'analyze') analyzeVideo();
+      if (action === 'tab-downloader') setActiveTab('downloaderPanel');
+      if (action === 'tab-analyzer') setActiveTab('analyzerPanel');
+      if (action === 'usage') {
+        setStatus('Quick start: paste URL, fetch details, set format/quality, then download.', 'ok');
+        setActiveTab('downloaderPanel');
+      }
+      closeMenus();
+    }
+
+    fetchBtn.addEventListener('click', fetchInfo);
+    downloadBtn.addEventListener('click', startDownload);
+    pickFolderBtn.addEventListener('click', pickFolder);
+    analyzeBtn.addEventListener('click', analyzeVideo);
+    tabButtons.forEach(btn => {
+      btn.addEventListener('click', () => setActiveTab(btn.dataset.tab));
+    });
+
+    uploadCsvBtn.addEventListener('click', () => csvFileInput.click());
+    csvFileInput.addEventListener('change', async (e) => {
+      const file = e.target.files && e.target.files[0];
+      if (!file) return;
+      try {
+        await handleCsvImport(file);
+      } catch (err) {
+        setAnalysisStatus(err.message || 'Failed to import CSV.', 'error');
+      } finally {
+        csvFileInput.value = '';
+      }
+    });
+
+    document.querySelectorAll('[data-menu-action]').forEach(item => {
+      item.addEventListener('click', () => handleMenuAction(item.dataset.menuAction));
+    });
+
+    document.addEventListener('click', (e) => {
+      const inMenu = e.target.closest('details.menu');
+      if (!inMenu) closeMenus();
+    });
+
+    formatSelect.addEventListener('change', updateSoundLabel);
+    urlInput.addEventListener('input', updateSoundLabel);
+
+    updateSoundLabel();
+    setActiveTab('downloaderPanel');
+    setStatus('Idle');
+    setProgress(0);
+    setAppState('Ready');
+  </script>
+</body>
+</html>
