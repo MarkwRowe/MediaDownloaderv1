@@ -12,6 +12,7 @@ python -m PyInstaller `
   --onefile `
   --name CreatorMediaToolkit `
   --add-data "index.html;." `
+  --add-data "mediaLogo.png;." `
   app.py
 
 Write-Host ""

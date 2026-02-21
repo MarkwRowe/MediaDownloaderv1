@@ -5,6 +5,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Creator Media Toolkit</title>
+  <link rel="icon" type="image/png" href="/mediaLogo.png" />
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap');
 
@@ -17,10 +18,12 @@
       --text: #172133;
       --muted: #586680;
       --primary: #1a73e8;
+      --primary-rgb: 26, 115, 232;
       --primary-strong: #1158b8;
       --success: #1e8e3e;
       --danger: #c5221f;
       --glow: 0 18px 44px rgba(26, 48, 86, 0.12);
+      --ui-scale: 1;
     }
 
     * { box-sizing: border-box; }
@@ -29,6 +32,7 @@
       margin: 0;
       min-height: 100vh;
       font-family: "Manrope", "Segoe UI", sans-serif;
+      font-size: calc(16px * var(--ui-scale));
       color: var(--text);
       background:
         radial-gradient(circle at 0% 0%, #e9f1ff 0, transparent 34%),
@@ -37,11 +41,25 @@
       padding: 26px;
     }
 
+    body.theme-dark {
+      --page-bg: #191919;
+      --surface: #232323;
+      --surface-soft: #2a2a2a;
+      --line: #353535;
+      --line-strong: #484848;
+      --text: #f0f0f0;
+      --muted: #b0b0b0;
+      --success: #5ccf7c;
+      --danger: #ff7f8e;
+      --glow: 0 20px 46px rgba(0, 0, 0, 0.45);
+      background: #191919;
+    }
+
     .shell {
       width: min(1180px, 100%);
       margin: 0 auto;
       background: var(--surface);
-      border: 1px solid var(--line);
+      border: 1px solid rgba(var(--primary-rgb), 0.28);
       border-radius: 18px;
       box-shadow: var(--glow);
       overflow: hidden;
@@ -53,7 +71,7 @@
       justify-content: space-between;
       gap: 12px;
       padding: 10px 16px;
-      background: linear-gradient(180deg, #fdfefe, #f4f7fd);
+      background: var(--surface);
       border-bottom: 1px solid var(--line);
     }
 
@@ -63,29 +81,27 @@
       align-items: center;
     }
 
-    details.menu {
+    .menu {
       position: relative;
     }
 
-    details.menu > summary {
-      list-style: none;
-      cursor: pointer;
+    .menu-label {
+      cursor: default;
       padding: 7px 12px;
       border-radius: 10px;
       font-size: 0.9rem;
       font-weight: 600;
       color: var(--muted);
       border: 1px solid transparent;
-      transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+      transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
     }
 
-    details.menu > summary::-webkit-details-marker { display: none; }
-
-    details.menu[open] > summary,
-    details.menu > summary:hover {
+    .menu.open .menu-label,
+    .menu-label:hover {
       color: var(--text);
-      background: #eef4ff;
-      border-color: #d3def0;
+      background: rgba(var(--primary-rgb), 0.14);
+      border-color: rgba(var(--primary-rgb), 0.32);
+      box-shadow: 0 0 0 1px rgba(var(--primary-rgb), 0.15) inset;
     }
 
     .menu-list {
@@ -99,11 +115,15 @@
       border-radius: 12px;
       background: var(--surface);
       box-shadow: 0 16px 34px rgba(20, 38, 70, 0.16);
+      display: none;
+    }
+
+    .menu.open .menu-list {
+      display: block;
     }
 
     .menu-item {
       width: 100%;
-      border: 0;
       border-radius: 8px;
       background: transparent;
       text-align: left;
@@ -112,9 +132,10 @@
       font-weight: 600;
       padding: 10px 11px;
       cursor: pointer;
+      user-select: none;
     }
 
-    .menu-item:hover { background: #f1f6ff; }
+    .menu-item:hover { background: rgba(var(--primary-rgb), 0.16); }
 
     .menu-divider {
       margin: 5px 0;
@@ -133,7 +154,7 @@
     .header {
       padding: 18px 24px 14px;
       border-bottom: 1px solid var(--line);
-      background: linear-gradient(180deg, #ffffff, #f8fbff);
+      background: var(--surface);
     }
 
     .header h1 {
@@ -141,6 +162,21 @@
       font-size: 1.36rem;
       font-weight: 800;
       letter-spacing: 0.01em;
+    }
+
+    .brand-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-logo {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      border: 1px solid var(--line-strong);
+      object-fit: cover;
+      background: var(--surface-soft);
     }
 
     .header p {
@@ -179,7 +215,7 @@
       gap: 10px;
       padding: 11px 18px 0;
       border-bottom: 1px solid var(--line);
-      background: #f8fbff;
+      background: var(--surface);
     }
     .tab-btn {
       border: 1px solid var(--line);
@@ -187,18 +223,19 @@
       border-top-left-radius: 11px;
       border-top-right-radius: 11px;
       padding: 10px 16px;
-      background: #f3f7ff;
-      color: #506181;
+      background: var(--surface-soft);
+      color: var(--muted);
       font-size: 0.9rem;
       font-weight: 700;
       cursor: pointer;
-      transition: background 0.18s ease, color 0.18s ease;
+      transition: background 0.18s ease, color 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
     }
 
     .tab-btn.active {
-      background: var(--surface);
+      background: rgba(var(--primary-rgb), 0.2);
       color: var(--primary);
-      border-color: var(--line-strong);
+      border-color: var(--primary);
+      box-shadow: inset 0 0 0 1px rgba(var(--primary-rgb), 0.4);
     }
 
     .section {
@@ -234,7 +271,7 @@
     .field label {
       display: block;
       margin-bottom: 6px;
-      color: #314766;
+      color: var(--text);
       font-size: 0.86rem;
       font-weight: 700;
     }
@@ -250,7 +287,7 @@
       padding: 10px 11px;
       font-size: 0.91rem;
       color: var(--text);
-      background: #fff;
+      background: var(--surface);
       transition: border-color 0.18s ease, box-shadow 0.18s ease;
     }
 
@@ -258,8 +295,8 @@
     select:focus,
     textarea:focus {
       outline: none;
-      border-color: #7ea8e6;
-      box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.12);
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(var(--primary-rgb), 0.24);
     }
 
     .row {
@@ -292,6 +329,7 @@
     button:hover {
       background: var(--primary-strong);
       transform: translateY(-1px);
+      box-shadow: 0 10px 24px rgba(var(--primary-rgb), 0.32);
     }
 
     button:disabled {
@@ -301,14 +339,14 @@
     }
 
     button.secondary {
-      background: #e9effa;
-      color: #2e456a;
-      border: 1px solid #d2ddef;
+      background: rgba(var(--primary-rgb), 0.14);
+      color: var(--text);
+      border: 1px solid rgba(var(--primary-rgb), 0.35);
     }
 
     button.secondary:hover {
-      background: #dbe7fb;
-      color: #223a5f;
+      background: rgba(var(--primary-rgb), 0.24);
+      color: var(--text);
     }
 
     .toggle {
@@ -338,18 +376,18 @@
 
     .meta p {
       margin: 7px 0;
-      color: #4a5f7f;
+      color: var(--muted);
       font-size: 0.9rem;
     }
 
-    .meta strong { color: #1d2f4d; }
+    .meta strong { color: var(--text); }
 
     .progress-wrap {
       margin-top: 12px;
       border: 1px solid var(--line);
       border-radius: 10px;
       padding: 10px;
-      background: #fff;
+      background: var(--surface);
     }
 
     .progress-bar {
@@ -363,7 +401,7 @@
     .progress-fill {
       width: 0%;
       height: 100%;
-      background: linear-gradient(90deg, #9ec2fb, #4b91f0, var(--primary));
+      background: var(--primary);
       transition: width 0.3s ease;
     }
 
@@ -381,7 +419,7 @@
       border: 1px solid var(--line);
       border-radius: 10px;
       padding: 12px;
-      background: #fff;
+      background: var(--surface);
     }
 
     .score {
@@ -394,7 +432,7 @@
     .list {
       margin: 6px 0 0;
       padding-left: 18px;
-      color: #425779;
+      color: var(--muted);
       font-size: 0.9rem;
     }
 
@@ -410,8 +448,25 @@
       border: 1px solid var(--line);
       border-radius: 8px;
       padding: 8px;
-      background: #f8fbff;
-      color: #3d5274;
+      background: var(--surface-soft);
+      color: var(--text);
+    }
+
+    body.theme-dark .menubar,
+    body.theme-dark .header,
+    body.theme-dark .tabbar {
+      background: var(--surface);
+    }
+
+    body.theme-dark .top-loader-fill,
+    body.theme-dark .progress-fill {
+      background: var(--primary);
+    }
+
+    .custom-note {
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 0.9rem;
     }
 
     .tab-panel.active { animation: panelIn .24s ease; }
@@ -444,43 +499,48 @@
   <main class="shell">
     <div class="menubar">
       <div class="menu-group">
-        <details class="menu" id="fileMenu">
-          <summary>File</summary>
+        <div class="menu" id="fileMenu">
+          <div class="menu-label" tabindex="0">File</div>
           <div class="menu-list">
-            <button class="menu-item" type="button" data-menu-action="new-session">New Session</button>
-            <button class="menu-item" type="button" data-menu-action="fetch-info">Fetch Video Details</button>
-            <button class="menu-item" type="button" data-menu-action="pick-folder">Select Download Folder</button>
+            <div class="menu-item" data-menu-action="new-session">New Session</div>
+            <div class="menu-item" data-menu-action="fetch-info">Fetch Video Details</div>
+            <div class="menu-item" data-menu-action="pick-folder">Select Download Folder</div>
             <hr class="menu-divider" />
-            <button class="menu-item" type="button" data-menu-action="start-download">Start Download</button>
+            <div class="menu-item" data-menu-action="start-download">Start Download</div>
           </div>
-        </details>
+        </div>
 
-        <details class="menu" id="viewMenu">
-          <summary>View</summary>
+        <div class="menu" id="viewMenu">
+          <div class="menu-label" tabindex="0">View</div>
           <div class="menu-list">
-            <button class="menu-item" type="button" data-menu-action="tab-downloader">Open Downloader</button>
+            <div class="menu-item" data-menu-action="tab-downloader">Open Downloader</div>
+            <div class="menu-item" data-menu-action="tab-customization">Open Customization</div>
           </div>
-        </details>
+        </div>
 
-        <details class="menu" id="helpMenu">
-          <summary>Help</summary>
+        <div class="menu" id="helpMenu">
+          <div class="menu-label" tabindex="0">Help</div>
           <div class="menu-list">
-            <button class="menu-item" type="button" data-menu-action="usage">Quick Start Tips</button>
+            <div class="menu-item" data-menu-action="usage">Quick Start Tips</div>
           </div>
-        </details>
+        </div>
       </div>
 
       <div class="app-state" id="appState">Ready</div>
     </div>
 
     <header class="header">
-      <h1>Creator Media Toolkit</h1>
+      <div class="brand-row">
+        <img class="brand-logo" src="/mediaLogo.png" alt="Creator Media Toolkit logo" />
+        <h1>Creator Media Toolkit</h1>
+      </div>
       <p>Download videos from YouTube, TikTok, and Instagram from one clean workspace.</p>
       <div id="globalLoading" class="top-loader"><div class="top-loader-fill"></div></div>
     </header>
 
     <nav class="tabbar">
       <button id="tabDownloader" class="tab-btn active" data-tab="downloaderPanel" type="button">Downloader</button>
+      <button id="tabCustomization" class="tab-btn" data-tab="customizationPanel" type="button">Customization</button>
     </nav>
 
     <section id="downloaderPanel" class="section tab-panel active">
@@ -554,6 +614,42 @@
             <p id="publicComments">Comments: -</p>
           </div>
         </aside>
+      </div>
+    </section>
+
+    <section id="customizationPanel" class="section tab-panel">
+      <div class="card">
+        <h2>User Customization</h2>
+        <div class="row">
+          <div class="field">
+            <label for="themeMode">Theme</label>
+            <select id="themeMode">
+              <option value="light">Light</option>
+              <option value="dark">Dark</option>
+              <option value="auto">Auto (System)</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="accentColor">Accent Color</label>
+            <input id="accentColor" type="color" value="#1a73e8" />
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="field">
+            <label for="uiScale">Text Size</label>
+            <input id="uiScale" type="range" min="90" max="120" value="100" />
+          </div>
+          <div class="field">
+            <label for="uiScaleValue">Size Value</label>
+            <input id="uiScaleValue" type="text" value="100%" readonly />
+          </div>
+        </div>
+
+        <div class="controls">
+          <button id="resetCustomizationBtn" class="secondary" type="button">Reset Customization</button>
+        </div>
+        <p id="customStatus" class="custom-note">Your settings are saved automatically on this device.</p>
       </div>
     </section>
 
@@ -643,6 +739,12 @@
     const tabButtons = Array.from(document.querySelectorAll('.tab-btn'));
     const globalLoading = document.getElementById('globalLoading');
     const appState = document.getElementById('appState');
+    const themeModeSelect = document.getElementById('themeMode');
+    const accentColorInput = document.getElementById('accentColor');
+    const uiScaleInput = document.getElementById('uiScale');
+    const uiScaleValue = document.getElementById('uiScaleValue');
+    const resetCustomizationBtn = document.getElementById('resetCustomizationBtn');
+    const customStatus = document.getElementById('customStatus');
 
     const thumb = document.getElementById('thumb');
     const titleEl = document.getElementById('title');
@@ -662,6 +764,78 @@
     let currentDurationSeconds = null;
     let busyCount = 0;
     let selectedDirectoryHandle = null;
+    const customSettingsKey = 'cmt_customization_v1';
+
+    function clamp(n, min, max) {
+      return Math.min(max, Math.max(min, n));
+    }
+
+    function normalizeHexColor(value) {
+      const text = String(value || '').trim();
+      if (!/^#[0-9A-Fa-f]{6}$/.test(text)) return '#1a73e8';
+      return text.toLowerCase();
+    }
+
+    function shadeHex(hex, factor) {
+      const color = normalizeHexColor(hex).slice(1);
+      const r = parseInt(color.slice(0, 2), 16);
+      const g = parseInt(color.slice(2, 4), 16);
+      const b = parseInt(color.slice(4, 6), 16);
+      const toHex = (v) => clamp(Math.round(v * factor), 0, 255).toString(16).padStart(2, '0');
+      return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
+    }
+
+    function hexToRgbString(hex) {
+      const color = normalizeHexColor(hex).slice(1);
+      const r = parseInt(color.slice(0, 2), 16);
+      const g = parseInt(color.slice(2, 4), 16);
+      const b = parseInt(color.slice(4, 6), 16);
+      return `${r}, ${g}, ${b}`;
+    }
+
+    function applyThemeMode(mode) {
+      const wanted = mode === 'auto'
+        ? (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
+        : mode;
+      document.body.classList.toggle('theme-dark', wanted === 'dark');
+    }
+
+    function applyCustomization(settings) {
+      const theme = settings.theme || 'light';
+      const accent = normalizeHexColor(settings.accent || '#1a73e8');
+      const scaleInt = clamp(Number(settings.scale) || 100, 90, 120);
+
+      document.documentElement.style.setProperty('--primary', accent);
+      document.documentElement.style.setProperty('--primary-rgb', hexToRgbString(accent));
+      document.documentElement.style.setProperty('--primary-strong', shadeHex(accent, 0.78));
+      document.documentElement.style.setProperty('--ui-scale', String(scaleInt / 100));
+      applyThemeMode(theme);
+
+      themeModeSelect.value = theme;
+      accentColorInput.value = accent;
+      uiScaleInput.value = String(scaleInt);
+      uiScaleValue.value = `${scaleInt}%`;
+    }
+
+    function saveCustomization(settings) {
+      localStorage.setItem(customSettingsKey, JSON.stringify(settings));
+      customStatus.textContent = 'Customization saved.';
+    }
+
+    function loadCustomization() {
+      try {
+        const raw = localStorage.getItem(customSettingsKey);
+        if (!raw) return { theme: 'light', accent: '#1a73e8', scale: 100 };
+        const parsed = JSON.parse(raw);
+        return {
+          theme: ['light', 'dark', 'auto'].includes(parsed.theme) ? parsed.theme : 'light',
+          accent: normalizeHexColor(parsed.accent || '#1a73e8'),
+          scale: clamp(Number(parsed.scale) || 100, 90, 120)
+        };
+      } catch {
+        return { theme: 'light', accent: '#1a73e8', scale: 100 };
+      }
+    }
 
     function setAppState(text) {
       appState.textContent = text;
@@ -764,7 +938,8 @@
     }
 
     function closeMenus() {
-      document.querySelectorAll('details.menu').forEach(menu => { menu.open = false; });
+      document.querySelectorAll('.menu').forEach(menu => menu.classList.remove('open'));
+      document.querySelectorAll('.menu-label').forEach(label => label.blur());
     }
 
     function clearSession() {
@@ -1201,6 +1376,7 @@
       if (action === 'pick-folder') pickFolder();
       if (action === 'start-download') startDownload();
       if (action === 'tab-downloader') setActiveTab('downloaderPanel');
+      if (action === 'tab-customization') setActiveTab('customizationPanel');
       if (action === 'usage') {
         setStatus('Quick start: paste URL, fetch details, set format/quality, then download.', 'ok');
         setActiveTab('downloaderPanel');
@@ -1230,17 +1406,72 @@
     });
 
     document.querySelectorAll('[data-menu-action]').forEach(item => {
-      item.addEventListener('click', () => handleMenuAction(item.dataset.menuAction));
+      item.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        closeMenus();
+        handleMenuAction(item.dataset.menuAction);
+      });
+    });
+
+    document.querySelectorAll('.menu-label').forEach(label => {
+      label.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const menu = label.closest('.menu');
+        if (!menu) return;
+        const shouldOpen = !menu.classList.contains('open');
+        closeMenus();
+        if (shouldOpen) menu.classList.add('open');
+      });
     });
 
     document.addEventListener('click', (e) => {
-      const inMenu = e.target.closest('details.menu');
+      const inMenu = e.target.closest('.menu');
       if (!inMenu) closeMenus();
     });
 
     formatSelect.addEventListener('change', updateSoundLabel);
     urlInput.addEventListener('input', updateSoundLabel);
 
+    themeModeSelect.addEventListener('change', () => {
+      const settings = {
+        theme: themeModeSelect.value,
+        accent: accentColorInput.value,
+        scale: Number(uiScaleInput.value)
+      };
+      applyCustomization(settings);
+      saveCustomization(settings);
+    });
+
+    accentColorInput.addEventListener('input', () => {
+      const settings = {
+        theme: themeModeSelect.value,
+        accent: accentColorInput.value,
+        scale: Number(uiScaleInput.value)
+      };
+      applyCustomization(settings);
+      saveCustomization(settings);
+    });
+
+    uiScaleInput.addEventListener('input', () => {
+      const settings = {
+        theme: themeModeSelect.value,
+        accent: accentColorInput.value,
+        scale: Number(uiScaleInput.value)
+      };
+      applyCustomization(settings);
+      saveCustomization(settings);
+    });
+
+    resetCustomizationBtn.addEventListener('click', () => {
+      const defaults = { theme: 'light', accent: '#1a73e8', scale: 100 };
+      applyCustomization(defaults);
+      saveCustomization(defaults);
+      customStatus.textContent = 'Customization reset to defaults.';
+    });
+
+    applyCustomization(loadCustomization());
     updateSoundLabel();
     setActiveTab('downloaderPanel');
     setStatus('Idle');

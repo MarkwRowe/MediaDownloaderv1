@@ -489,6 +489,16 @@ def index():
     return send_from_directory(ASSET_DIR, "index.html")
 
 
+@app.route("/mediaLogo.png")
+def media_logo():
+    return send_from_directory(ASSET_DIR, "mediaLogo.png")
+
+
+@app.route("/favicon.ico")
+def favicon():
+    return send_from_directory(ASSET_DIR, "mediaLogo.png")
+
+
 @app.route("/fetch_info", methods=["POST"])
 def fetch_info():
     data = request.get_json(silent=True) or {}
